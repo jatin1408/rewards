@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name = "Reward_Info")
@@ -19,5 +19,5 @@ public class RewardInfo {
 
     private Long userId;
     private Long rewardPoints;
-    private LocalDateTime rewardDateTime;
+    private Date rewardDateTime;
 }

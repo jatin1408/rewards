@@ -13,9 +13,11 @@ import com.wibmo.rewards.repository.CustomerTransactionsRepository;
 import com.wibmo.rewards.repository.MerchantDetailsRepository;
 import com.wibmo.rewards.repository.WalletDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
+@Service
 public class WalletService {
 
     @Autowired

@@ -4,11 +4,13 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
 
 @Entity
-@Table(name = "Wallet_details")
+@Table(name = "wallet_details")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,8 +22,11 @@ public class WalletDetails {
     private Long userId;
     private Long balance;
     private Integer walletStatus;
+    @CreationTimestamp
     private Date walletCreationDate;
+    @UpdateTimestamp
     private Date walletUpdateDate;
     private Long rewardPoints;
+    private String mobileNumber;
 }
 

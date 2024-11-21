@@ -5,10 +5,12 @@ import com.wibmo.rewards.dto.response.TransactionHistoryResponse;
 import com.wibmo.rewards.model.CustomerTransactions;
 import com.wibmo.rewards.repository.CustomerTransactionsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
 
+@Service
 public class TransactionHistoryService {
 
     @Autowired
