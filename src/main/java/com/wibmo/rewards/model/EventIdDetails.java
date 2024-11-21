@@ -16,7 +16,7 @@ import java.util.Date;
 public class EventIdDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer eventId;
+    private Long eventId;
 
     private String eventDesc;
     private String eventType;

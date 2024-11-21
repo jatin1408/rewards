@@ -6,10 +6,13 @@ import com.wibmo.rewards.dto.request.WalletDetailsRequest;
 import com.wibmo.rewards.dto.response.PayToMerchantResponse;
 import com.wibmo.rewards.dto.response.SendMoneyResponse;
 import com.wibmo.rewards.dto.response.WalletDetailsResponse;
+import com.wibmo.rewards.enums.EventTypes;
 import com.wibmo.rewards.model.CustomerTransactions;
+import com.wibmo.rewards.model.EventIdDetails;
 import com.wibmo.rewards.model.MerchantDetails;
 import com.wibmo.rewards.model.WalletDetails;
 import com.wibmo.rewards.repository.CustomerTransactionsRepository;
+import com.wibmo.rewards.repository.EventDetailsRepository;
 import com.wibmo.rewards.repository.MerchantDetailsRepository;
 import com.wibmo.rewards.repository.WalletDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +31,9 @@ public class WalletService {
 
     @Autowired
     MerchantDetailsRepository merchantDetailsRepository;
+
+    @Autowired
+    EventDetailsRepository eventDetailsRepository;
 
     public SendMoneyResponse sendMoney(SendMoneyRequest request) {
         // Fetch sender's wallet
@@ -49,13 +55,20 @@ public class WalletService {
 
         walletDetailsRepository.save(senderWallet);
         walletDetailsRepository.save(receiverWallet);
-
+        EventIdDetails eventIdDetails = eventDetailsRepository.findByEventType(EventTypes.WALLET_LOAD.getEventType()).orElseThrow(() -> new RuntimeException("No event mapping found"));
         // Log transaction
         customerTransactionsRepository.save(CustomerTransactions.builder().txnAmt(request.getTxnAmount())
-                .eventId(request.getEventId())
+                .eventId(eventIdDetails.getEventId())
                 .reqDateTime(request.getRequestDatetime())
                 .resDateTime(new Date())
-                .merchantId(receiverWallet.getWalletId())
+                .userId(receiverWallet.getUserId())
+                .build());
+        eventIdDetails = eventDetailsRepository.findByEventType(EventTypes.WALLET_UNLOAD.getEventType()).orElseThrow(() -> new RuntimeException("No event mapping found"));
+        customerTransactionsRepository.save(CustomerTransactions.builder().txnAmt(request.getTxnAmount())
+                .eventId(eventIdDetails.getEventId())
+                .reqDateTime(request.getRequestDatetime())
+                .resDateTime(new Date())
+                .userId(senderWallet.getUserId())
                 .build());
 
         return new SendMoneyResponse("200", "Transaction successful", new Date(), senderWallet.getBalance());
@@ -78,10 +91,10 @@ public class WalletService {
         senderWallet.setBalance(senderWallet.getBalance() - request.getTxnAmount());
 
         walletDetailsRepository.save(senderWallet);
-
+        EventIdDetails eventIdDetails = eventDetailsRepository.findByEventType(EventTypes.WALLET_LOAD.getEventType()).orElseThrow(() -> new RuntimeException("No event mapping found"));
         // Log transaction
         customerTransactionsRepository.save(CustomerTransactions.builder().txnAmt(request.getTxnAmount())
-                .eventId(request.getEventId())
+                .eventId(eventIdDetails.getEventId())
                 .reqDateTime(request.getRequestDatetime())
                 .resDateTime(new Date())
                 .merchantId(request.getMerchantId())

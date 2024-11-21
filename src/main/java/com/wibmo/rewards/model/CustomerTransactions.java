@@ -21,7 +21,7 @@ public class CustomerTransactions {
     private Long userId;
     private Date reqDateTime;
     private Date resDateTime;
-    private Integer eventId;
+    private Long eventId;
     private Long txnAmt;
     private Integer mcc;
     private String txnStatus;
